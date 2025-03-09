@@ -12,15 +12,10 @@ pub fn build(b: *std.Build) void {
     coroutine_lib.addCSourceFile(.{ .file = b.path("src/coroutine.c") });
     coroutine_lib.linkLibC();
 
-    const lib = b.addStaticLibrary(.{
-        .name = "zoro",
-        .root_source_file = b.path("src/zoro.zig"),
+    const module = b.addModule("zoro", .{
         .target = target,
         .optimize = optimize,
     });
 
-    lib.linkLibrary(coroutine_lib);
-    lib.linkLibC();
-
-    b.installArtifact(lib);
+    module.linkLibrary(coroutine_lib);
 }
