@@ -16,6 +16,5 @@ pub fn build(b: *std.Build) void {
         .target = target,
         .optimize = optimize,
     });
-
     module.linkLibrary(coroutine_lib);
 }
