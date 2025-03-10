@@ -5,7 +5,7 @@ A port of tsoding's [coroutines](https://github.com/tsoding/coroutines) in Zig
 ## Install
 
 ```shell
-zig fetch --save "git+https://github.com/ciathefed/zoro#v0.1.0-beta.1"
+zig fetch --save "git+https://github.com/ciathefed/zoro#v0.1.0"
 ```
 
 Add the following to `build.zig`:
