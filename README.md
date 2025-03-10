@@ -5,7 +5,7 @@ Bindings for tsoding's [coroutines](https://github.com/tsoding/coroutines) in Zi
 ## Install
 
 ```shell
-zig fetch --save "git+https://github.com/ciathefed/zoro#v0.1.0"
+zig fetch --save "git+https://github.com/ciathefed/zoro#v0.1.1"
 ```
 
 Add the following to `build.zig`:
