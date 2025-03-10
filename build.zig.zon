@@ -1,6 +1,7 @@
 .{
-    .name = "zoro",
+    .name = .zoro,
     .version = "0.1.0",
+    .fingerprint = 0xa6497444156dceb2,
     .minimum_zig_version = "0.13.0",
     .dependencies = .{},
     .paths = .{

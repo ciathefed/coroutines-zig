@@ -15,7 +15,7 @@ const zoro = b.dependency("zoro", .{
     .target = target,
     .optimize = optimize,
 });
-exe.root_module.addImport("zoro", zoro.module("zoro"));
+exe_mod.addImport("zoro", zoro.module("zoro"));
 ```
 
 ## Example
