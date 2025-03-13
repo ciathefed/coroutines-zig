@@ -1,7 +1,7 @@
 .{
     .name = .coroutines,
     .version = "0.1.0",
-    .fingerprint = 0xa6497444156dceb2,
+    .fingerprint = 0x4b57082b3d7bc67d,
     .minimum_zig_version = "0.14.0",
     .dependencies = .{},
     .paths = .{
