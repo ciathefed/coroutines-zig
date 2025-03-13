@@ -4,8 +4,8 @@ pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
-    const module = b.addModule("zoro", .{
-        .root_source_file = b.path("src/zoro.zig"),
+    const module = b.addModule("coroutines", .{
+        .root_source_file = b.path("src/coroutines.zig"),
         .target = target,
         .optimize = optimize,
     });

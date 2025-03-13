@@ -2,7 +2,7 @@ const std = @import("std");
 const mem = std.mem;
 const net = std.net;
 const posix = std.posix;
-const zoro = @import("zoro");
+const coroutines = @import("coroutines");
 
 var quit: bool = false;
 var server_id: usize = 0;
@@ -16,15 +16,15 @@ fn handleConn(arg: ?*anyopaque) callconv(.c) void {
         return;
     };
 
-    std.debug.print("[{d}] client connected\n", .{zoro.id()});
+    std.debug.print("[{d}] client connected\n", .{coroutines.id()});
     defer {
-        std.debug.print("[{d}] client disconnected\n", .{zoro.id()});
+        std.debug.print("[{d}] client disconnected\n", .{coroutines.id()});
         posix.close(conn);
         allocator.free(buf);
     }
 
     while (true) {
-        zoro.sleepRead(conn);
+        coroutines.sleepRead(conn);
         const n = posix.read(conn, buf) catch |err| {
             std.log.err("failed to read from client: {}", .{err});
             return;
@@ -35,19 +35,19 @@ fn handleConn(arg: ?*anyopaque) callconv(.c) void {
         const trimmed = mem.trim(u8, chunk, &std.ascii.whitespace);
 
         if (mem.eql(u8, trimmed, "quit")) {
-            std.debug.print("[{d}] client requested to quit\n", .{zoro.id()});
+            std.debug.print("[{d}] client requested to quit\n", .{coroutines.id()});
             return;
         } else if (mem.eql(u8, trimmed, "shutdown")) {
-            std.debug.print("[{d}] client requested to shutdown server\n", .{zoro.id()});
+            std.debug.print("[{d}] client requested to shutdown server\n", .{coroutines.id()});
             quit = true;
-            zoro.wakeUp(server_id);
+            coroutines.wakeUp(server_id);
             return;
         }
 
-        std.debug.print("[{d}] client sent {d} bytes\n", .{ zoro.id(), n });
+        std.debug.print("[{d}] client sent {d} bytes\n", .{ coroutines.id(), n });
 
         while (chunk.len > 0) {
-            zoro.sleepWrite(conn);
+            coroutines.sleepWrite(conn);
             const m = posix.write(conn, chunk) catch |err| {
                 std.log.err("failed to write to client: {}", .{err});
                 return;
@@ -59,9 +59,9 @@ fn handleConn(arg: ?*anyopaque) callconv(.c) void {
 }
 
 pub fn main() !void {
-    zoro.init();
+    coroutines.init();
 
-    server_id = zoro.id();
+    server_id = coroutines.id();
 
     const host = "127.0.0.1";
     const port = 6969;
@@ -77,10 +77,10 @@ pub fn main() !void {
     try posix.bind(server, &address.any, address.getOsSockLen());
     try posix.listen(server, 69);
 
-    std.debug.print("[{d}] server listening on {s}:{d}\n", .{ zoro.id(), host, port });
+    std.debug.print("[{d}] server listening on {s}:{d}\n", .{ coroutines.id(), host, port });
 
     while (true) {
-        zoro.sleepRead(server);
+        coroutines.sleepRead(server);
         if (quit) break;
 
         const conn = posix.accept(server, null, null, posix.SOCK.NONBLOCK) catch |err| {
@@ -88,6 +88,6 @@ pub fn main() !void {
             continue;
         };
 
-        zoro.go(handleConn, @ptrFromInt(@as(usize, @intCast(conn))));
+        coroutines.go(handleConn, @ptrFromInt(@as(usize, @intCast(conn))));
     }
 }
